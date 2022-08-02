@@ -4,7 +4,7 @@
 - Zk proof wiki
 - Anonymous identity store (plug and play personal data for apps)
 - Private reputation system
+- Reputation based lending protocol (collateralizaiton ratio decreases with repaid loans)
+- Mobile wallet for attestations (rewards, proofs of ownership, etc.)
 
-Hackmd: https://hackmd.io/pINbC9obSlmnfjGtgNmMxw 
-Draw.io: https://app.diagrams.net/#G1HMJay9UH2cWw9Dkl8Y2hJb3V5XQntbJB 
 Notion: https://www.notion.so/ZK-Exploration-98382d073d064f41a139af7eeff8604a 
