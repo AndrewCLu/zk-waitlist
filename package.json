@@ -1,0 +1,22 @@
+{
+  "name": "zk-attestations",
+  "version": "1.0.0",
+  "description": "PoC: Create a smart contract where users can claim their spot on a waitlist, and then later anonymously prove that they had previously joined the waitlist.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndrewCLu/zk-attestations.git"
+  },
+  "author": "Andrew Lu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AndrewCLu/zk-attestations/issues"
+  },
+  "homepage": "https://github.com/AndrewCLu/zk-attestations#readme",
+  "dependencies": {
+    "circomlib": "^2.0.5"
+  }
+}
