@@ -6,13 +6,17 @@ TEST_FLAG=$2
 if [ $TEST_FLAG == "true" ]
 then
   TEST=true
-else 
+elif [ $TEST_FLAG == "false" ]
+then
   TEST=false
+else
+  echo "Test mode must be set to either true or false!"
+  exit
 fi
 
 echo "Compiling circuit $CIRCUIT, test mode: $TEST";
 
-if [ $TEST_FLAG = false ]
+if [ $TEST = false ]
 then
   mkdir generated/$CIRCUIT;
   cd generated/$CIRCUIT;
