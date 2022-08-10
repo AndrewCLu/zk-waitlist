@@ -32,10 +32,12 @@ if [ $TEST = false ]; then
   node ${CIRCUIT}_js/generate_witness.js ${CIRCUIT}_js/$CIRCUIT.wasm input.json witness.wtns
   if [ $PROOF = true ]; then
     snarkjs plonk prove ${CIRCUIT}_final.zkey witness.wtns proof.json public.json;
+  fi
 else
   cd test_generated/$CIRCUIT;
   echo $INPUT > input.json;
   node ${CIRCUIT}_js/generate_witness.js ${CIRCUIT}_js/$CIRCUIT.wasm input.json witness.wtns
   if [ $PROOF = true ]; then
     snarkjs plonk prove ${CIRCUIT}_final.zkey witness.wtns proof.json public.json;
+  fi
 fi
