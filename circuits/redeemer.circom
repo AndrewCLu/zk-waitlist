@@ -4,31 +4,28 @@ include "../node_modules/circomlib/circuits/poseidon.circom";
 
 template Redeemer(N) { // N is the depth of the Merkle tree
   signal input secret;
-  signal input leaf;
   signal input merkle_branch[N]; // Values of the nodes on the Merkle branch
   signal input node_is_left[N]; // Represents if the node is on the left or right of its neighbor
   signal output nullifier;
   signal output merkle_root;
-  signal merkle_hashes[N + 1];
   
   component merkle_hashers[N];
 
-  // Check that the leaf is correctly generated from the secret
-  component leaf_tester = Poseidon(2);
-  leaf_tester.inputs[0] <== secret;
-  leaf_tester.inputs[1] <== 0;
-  leaf === leaf_tester.out;
-
   // Compute the nullifier from the secret
-  component nullifier_hash = Poseidon(2);
-  nullifier_hash.inputs[0] <== secret;
-  nullifier_hash.inputs[1] <== 1;
-  nullifier <== nullifier_hash.out;
+  component nullifier_maker = Poseidon(2);
+  nullifier_maker.inputs[0] <== secret;
+  nullifier_maker.inputs[1] <== 1;
+  nullifier <== nullifier_maker.out;
+
+  // Generate the leaf hash
+  component leaf_maker = Poseidon(2);
+  leaf_maker.inputs[0] <== secret;
+  leaf_maker.inputs[1] <== 0;
+  component leaf_hasher = Poseidon(1);
+  leaf_hasher.inputs[0] <== leaf_maker.out;
+  var current_hash = leaf_hasher.out;
 
   // Compute the Merkle root based on the claimed branch
-  component leaf_hasher = Poseidon(1);
-  leaf_hasher.inputs[0] <== leaf;
-  var current_hash = leaf_hasher.out;
   for (var i=0; i<N; i++) {
     merkle_hashers[i] = Poseidon(2);
     var node_to_hash_is_left = node_is_left[i];
