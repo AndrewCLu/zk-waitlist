@@ -5,3 +5,4 @@ generated/*
 test_circuits/*
 test_generated/*
 saved_inputs.json
+saved_public.json
