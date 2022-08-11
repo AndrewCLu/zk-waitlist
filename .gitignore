@@ -1,5 +1,9 @@
 node_modules/*
 .DS_Store
+
+artifacts/*
+cache/*
+
 ptau/*
 generated/*
 test_circuits/*
