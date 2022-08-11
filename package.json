@@ -18,5 +18,8 @@
   "homepage": "https://github.com/AndrewCLu/zk-attestations#readme",
   "dependencies": {
     "circomlib": "^2.0.5"
+  },
+  "devDependencies": {
+    "hardhat": "^2.10.1"
   }
 }
