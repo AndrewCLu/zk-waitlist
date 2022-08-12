@@ -1,7 +1,7 @@
 pragma solidity 0.8.9;
 
 interface IWaitlist {
-  function join() external returns (bool);
+  function join(uint commitment) external returns (bool);
 
   function redeem(
     bytes memory proof, 
