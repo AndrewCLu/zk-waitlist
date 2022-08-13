@@ -3,6 +3,12 @@
 
 CIRCUIT=$1
 TEST_FLAG=$2
+
+if [ $# != 2 ]; then
+  echo "Usage: ./compile_circuit.sh [circuit_name] [test_mode (true/false)]"
+  exit
+fi
+
 if [ $TEST_FLAG == "true" ]
 then
   TEST=true

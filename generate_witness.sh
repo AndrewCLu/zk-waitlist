@@ -6,6 +6,11 @@ TEST_FLAG=$2
 PROOF_FLAG=$3
 INPUT=$4
 
+if [ $# != 4 ]; then
+  echo "Usage: ./generate_witness.sh [circuit_name] [test_mode (true/false)] [generate_proof (true/false)] [input (json)]"
+  exit
+fi
+
 if [ $TEST_FLAG == "true" ]; then
   TEST=true
 elif [ $TEST_FLAG == "false" ];then
