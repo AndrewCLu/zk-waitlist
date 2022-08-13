@@ -22,6 +22,9 @@ contract Waitlist is IWaitlist {
   // Root of the Merkle tree
   uint public merkleRoot;
 
+  // Number of users who have redeemed their spot on the waitlist
+  uint8 redeemedWaitlistSpots;
+
   // Mapping of nullifiers that have been used
   mapping(uint => bool) internal usedNullifiers;
 
@@ -36,6 +39,7 @@ contract Waitlist is IWaitlist {
     lockerVerifier = _lockerVerifier;
     redeemerVerifier = _redeemerVerifier;
     usedWaitlistSpots = 0;
+    redeemedWaitlistSpots = 0;
     isLocked = false;
   }
 
@@ -83,7 +87,7 @@ contract Waitlist is IWaitlist {
       }
     }
 
-    // Verify the proof of Merkle root is correct
+    // Verify proof of Merkle root is correct
     if (!lockerVerifier.verifyProof(proof, pubSignals)) {
       return false;
     }
@@ -97,6 +101,33 @@ contract Waitlist is IWaitlist {
     bytes memory proof, 
     uint[] memory pubSignals
   ) public returns (bool) {
+    // Waitlist has not been locked yet
+    if (!isLocked) {
+      return false;
+    }
+
+    uint nullifier = pubSignals[0];
+    uint proofMerkleRoot = pubSignals[1];
+
+    // Nullifier has already been used
+    if (usedNullifiers[nullifier]) {
+      return false; 
+    }
+
+    // Check claimed Merkle root is equal to the current one
+    if (proofMerkleRoot != merkleRoot) {
+      return false;
+    }
+
+    // Verify proof of nullifier and Merkle root is correct
+    if (!redeemerVerifier.verifyProof(proof, pubSignals)) {
+      return false;
+    }
+
+    usedNullifiers[nullifier] = true;
+    redeemedWaitlistSpots++;
+    // TODO: Emit an event that a waitlist spot has been redeemed for the given user
+    // or store their address on a list of redeemed users
     return true;
   }
 }
