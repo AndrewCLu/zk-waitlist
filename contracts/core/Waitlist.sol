@@ -19,7 +19,7 @@ contract Waitlist is IWaitlist {
   // Whether or not the waitlist has been locked
   bool public isLocked;
 
-  // Root of the merkle tree
+  // Root of the Merkle tree
   uint public merkleRoot;
 
   // Mapping of nullifiers that have been used
@@ -62,6 +62,34 @@ contract Waitlist is IWaitlist {
     bytes memory proof, 
     uint[] memory pubSignals
   ) public returns (bool) {
+    // Waitlist is already locked
+    if (isLocked) {
+      return false;
+    } 
+
+    uint numCommitments = commitments.length;
+    // There are either no commitments or the number of commitments is not a power of 2
+    // Note: The current locker verifier circuit requires the number of commitments to be a power of 2
+    // TODO: Remove this constraint, possibly by adding extra Merkle leaves
+    if (numCommitments == 0 || (numCommitments & (numCommitments - 1)) != 0) {
+      return false;
+    }
+
+    // Check that the public inputs used for the locker prover, 
+    // i.e. the claimed commitments, are equal to the actual commitments
+    for (uint i=0; i<numCommitments; i++) {
+      if (commitments[i] != pubSignals[i]) {
+        return false;
+      }
+    }
+
+    // Verify the proof of Merkle root is correct
+    if (!lockerVerifier.verifyProof(proof, pubSignals)) {
+      return false;
+    }
+
+    isLocked = true;
+    merkleRoot = pubSignals[numCommitments]; // Set Merkle root to be the output of the proof
     return true;
   }
 
