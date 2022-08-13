@@ -1,31 +1,40 @@
 pragma solidity 0.8.9;
 
 import "../interfaces/IWaitlist.sol";
+import "../interfaces/IVerifier.sol";
 
 contract Waitlist is IWaitlist {
   // Max number of users allowed on the waitlist
-  uint8 maxWaitlistSpots;
+  uint8 public maxWaitlistSpots;
 
   // Current number of users on waitlist
-  uint8 usedWaitlistSpots;
+  uint8 public usedWaitlistSpots;
 
   // Mapping of users on the waitlist
   mapping(address => bool) internal waitlistedUsers;
 
   // List of public commitments from waitlisted users
-  uint[] commitments;
+  uint[] public commitments;
 
   // Whether or not the waitlist has been locked
-  bool isLocked;
+  bool public isLocked;
 
   // Root of the merkle tree
-  uint merkleRoot;
+  uint public merkleRoot;
 
   // Mapping of nullifiers that have been used
   mapping(uint => bool) internal usedNullifiers;
 
-  constructor(uint8 _maxWaitlistSpots) {
+  // Contract to verify waitlist locking proofs
+  IVerifier public immutable lockerVerifier;
+  
+  // Contract to verify redemption proofs
+  IVerifier public immutable redeemerVerifier;
+
+  constructor(uint8 _maxWaitlistSpots, IVerifier _lockerVerifier, IVerifier _redeemerVerifier) {
     maxWaitlistSpots = _maxWaitlistSpots;
+    lockerVerifier = _lockerVerifier;
+    redeemerVerifier = _redeemerVerifier;
     usedWaitlistSpots = 0;
     isLocked = false;
   }
