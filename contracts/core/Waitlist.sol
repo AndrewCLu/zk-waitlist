@@ -41,8 +41,12 @@ contract Waitlist is IWaitlist {
   );
   event Lock(
     address locker,
-    uint numWaitlistedUsers,
+    uint numWaitlistedUsers, // TODO: This can be a uint8
     uint merkleRoot
+  );
+  event Redeem(
+    address indexed redeemer,
+    uint nullifier
   );
 
   constructor(uint8 _maxWaitlistSpots, address _lockerVerifierAddress, address _redeemerVerifierAddress) {
@@ -140,8 +144,7 @@ contract Waitlist is IWaitlist {
 
     usedNullifiers[nullifier] = true;
     redeemedWaitlistSpots++;
-    // TODO: Emit an event that a waitlist spot has been redeemed for the given user
-    // or store their address on a list of redeemed users
+    emit Redeem(msg.sender, nullifier);
     return true;
   }
 }
