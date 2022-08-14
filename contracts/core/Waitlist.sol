@@ -34,6 +34,12 @@ contract Waitlist is IWaitlist {
   // Contract to verify redemption proofs
   IVerifier public immutable redeemerVerifier;
 
+  event Join(
+    address indexed joiner,
+    uint8 waitlistNumber, // Joiner's number on the waitlist
+    uint commitment
+  );
+
   constructor(uint8 _maxWaitlistSpots, address _lockerVerifierAddress, address _redeemerVerifierAddress) {
     maxWaitlistSpots = _maxWaitlistSpots;
     lockerVerifier = IVerifier(_lockerVerifierAddress);
@@ -59,6 +65,7 @@ contract Waitlist is IWaitlist {
       waitlistedUsers[msg.sender] = true;
       // TODO: Basic checks on commitment
       commitments.push(commitment);
+      emit Join(msg.sender, usedWaitlistSpots, commitment);
       return true;
     }
   }
