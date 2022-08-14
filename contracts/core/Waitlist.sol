@@ -41,7 +41,7 @@ contract Waitlist is IWaitlist {
   );
   event Lock(
     address locker,
-    uint8 numWaitlistedUsers,
+    uint numWaitlistedUsers,
     uint merkleRoot
   );
 
