@@ -2,9 +2,9 @@ const { expect } = require("chai");
 
 const { loadFixture } = require("@nomicfoundation/hardhat-network-helpers");
 
-describe("Redeemer verifier contract", function () {
+describe("Redeemer verifier contract depth 4", function () {
   async function deployTokenFixture() {
-    const Verifier = await ethers.getContractFactory("RedeemerVerifier");
+    const Verifier = await ethers.getContractFactory("RedeemerVerifierDepth4");
     const verifier = await Verifier.deploy();
 
     return verifier;

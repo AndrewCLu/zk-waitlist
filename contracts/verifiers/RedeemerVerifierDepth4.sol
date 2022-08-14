@@ -23,7 +23,7 @@ pragma solidity >=0.7.0 <0.9.0;
 
 import "../interfaces/IVerifier.sol";
 
-contract RedeemerVerifier is IVerifier {
+contract RedeemerVerifierDepth4 is IVerifier {
     
     uint32 constant n =   32768;
     uint16 constant nPublic =  2;
