@@ -14,3 +14,5 @@ Todo list:
 - Ensure node_is_left is treated as either 0 or 1
 - Clean up Merkle tree proof logic
 - Add support for transfer proof (allow new merkle leaf to be "mixed in")
+- Emit waitlist events
+- Set owner/admin in waitlist contract
