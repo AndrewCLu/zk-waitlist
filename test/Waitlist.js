@@ -40,8 +40,8 @@ describe("Waitlist contract", function () {
         deploy4PersonWaitlist
       );
 
-      const joinResult = await waitlist.callStatic.join(1)
-      expect(joinResult).to.equal(true);
+      const join = waitlist.join(EXAMPLE_COMMITMENT_1);
+      await expect(join).to.emit(waitlist, "Join").withArgs(signers[0].address, 1, EXAMPLE_COMMITMENT_1);
     });
   })
 });
