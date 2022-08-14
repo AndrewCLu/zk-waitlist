@@ -39,6 +39,11 @@ contract Waitlist is IWaitlist {
     uint8 waitlistNumber, // Joiner's number on the waitlist
     uint commitment
   );
+  event Lock(
+    address locker,
+    uint8 numWaitlistedUsers,
+    uint merkleRoot
+  );
 
   constructor(uint8 _maxWaitlistSpots, address _lockerVerifierAddress, address _redeemerVerifierAddress) {
     maxWaitlistSpots = _maxWaitlistSpots;
@@ -102,6 +107,7 @@ contract Waitlist is IWaitlist {
 
     isLocked = true;
     merkleRoot = pubSignals[numCommitments]; // Set Merkle root to be the output of the proof
+    emit Lock(msg.sender, numCommitments, merkleRoot);
     return true;
   }
 
