@@ -70,6 +70,14 @@ contract Waitlist is IWaitlist {
     } else if (usedWaitlistSpots >= maxWaitlistSpots) {
       return false;
     } else {
+      // Commitment has already been used, user must choose a new secret
+      for (uint i=0; i < commitments.length; i++) {
+        if (commitment == commitments[i]) {
+          return false;
+        }
+      }
+
+      // Passed all checks, adding user to waitlist
       usedWaitlistSpots++;
       waitlistedUsers[msg.sender] = true;
       // TODO: Basic checks on commitment
@@ -109,6 +117,7 @@ contract Waitlist is IWaitlist {
       return false;
     }
 
+    // Passed all checks, locking contract
     isLocked = true;
     merkleRoot = pubSignals[numCommitments]; // Set Merkle root to be the output of the proof
     emit Lock(msg.sender, numCommitments, merkleRoot);
@@ -142,6 +151,7 @@ contract Waitlist is IWaitlist {
       return false;
     }
 
+    // Passed all checks, redeeming spot on waitlist
     usedNullifiers[nullifier] = true;
     redeemedWaitlistSpots++;
     emit Redeem(msg.sender, nullifier);

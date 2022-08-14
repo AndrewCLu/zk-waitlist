@@ -51,9 +51,20 @@ describe("Waitlist contract", function () {
         deploy4PersonWaitlist
       );
 
-      const join = waitlist.join(EXAMPLE_COMMITMENT_1);
-      await expect(join).to.emit(waitlist, "Join").withArgs(signers[0].address, 1, EXAMPLE_COMMITMENT_1);
-      const join2 = waitlist.join(EXAMPLE_COMMITMENT_1);
+      const join1 = waitlist.join(EXAMPLE_COMMITMENT_1);
+      await expect(join1).to.emit(waitlist, "Join").withArgs(signers[0].address, 1, EXAMPLE_COMMITMENT_1);
+      const join2 = waitlist.join(EXAMPLE_COMMITMENT_2);
+      await expect(join2).to.not.emit(waitlist, "Join");
+    });
+
+    it("Should not allow the same commitment to be used twice", async function () {
+      const {signers, waitlist} = await loadFixture(
+        deploy4PersonWaitlist
+      );
+
+      const join1 = waitlist.connect(signers[0]).join(EXAMPLE_COMMITMENT_1);
+      await expect(join1).to.emit(waitlist, "Join").withArgs(signers[0].address, 1, EXAMPLE_COMMITMENT_1);
+      const join2 = waitlist.connect(signers[1]).join(EXAMPLE_COMMITMENT_1);
       await expect(join2).to.not.emit(waitlist, "Join");
     });
 
@@ -62,16 +73,15 @@ describe("Waitlist contract", function () {
         deploy4PersonWaitlist
       );
 
-      // TODO: Dont allow same commitments to be used
-      const join1 = waitlist.connect(signers[0].address).join(EXAMPLE_COMMITMENT_1);
+      const join1 = waitlist.connect(signers[0]).join(EXAMPLE_COMMITMENT_1);
       await expect(join1).to.emit(waitlist, "Join").withArgs(signers[0].address, 1, EXAMPLE_COMMITMENT_1);
-      const join2 = waitlist.connect(signers[1].address).join(EXAMPLE_COMMITMENT_2);
+      const join2 = waitlist.connect(signers[1]).join(EXAMPLE_COMMITMENT_2);
       await expect(join2).to.emit(waitlist, "Join").withArgs(signers[1].address, 2, EXAMPLE_COMMITMENT_2);
-      const join3 = waitlist.connect(signers[2].address).join(EXAMPLE_COMMITMENT_3);
+      const join3 = waitlist.connect(signers[2]).join(EXAMPLE_COMMITMENT_3);
       await expect(join3).to.emit(waitlist, "Join").withArgs(signers[2].address, 3, EXAMPLE_COMMITMENT_3);
-      const join4 = waitlist.connect(signers[3].address).join(EXAMPLE_COMMITMENT_4);
+      const join4 = waitlist.connect(signers[3]).join(EXAMPLE_COMMITMENT_4);
       await expect(join4).to.emit(waitlist, "Join").withArgs(signers[3].address, 4, EXAMPLE_COMMITMENT_4);
-      const join5 = waitlist.connect(signers[4].address).join(EXAMPLE_COMMITMENT_5);
+      const join5 = waitlist.connect(signers[4]).join(EXAMPLE_COMMITMENT_5);
       await expect(join5).to.not.emit(waitlist, "Join");
     });
   })
