@@ -42,4 +42,4 @@ template Redeemer(N) { // N is the depth of the Merkle tree
   merkle_root <== current_hash;
 }
 
-component main = Redeemer(4);
+component main = Redeemer(2);

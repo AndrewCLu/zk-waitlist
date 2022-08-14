@@ -41,6 +41,7 @@ contract Waitlist is IWaitlist {
     usedWaitlistSpots = 0;
     redeemedWaitlistSpots = 0;
     isLocked = false;
+    // TODO: Can we ensure that the verifier contracts are the correct ones with the right parameters (merkle tree depth, etc.)?
   }
 
   function join(uint commitment) public returns (bool) {
