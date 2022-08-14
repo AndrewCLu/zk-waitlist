@@ -34,10 +34,10 @@ contract Waitlist is IWaitlist {
   // Contract to verify redemption proofs
   IVerifier public immutable redeemerVerifier;
 
-  constructor(uint8 _maxWaitlistSpots, IVerifier _lockerVerifier, IVerifier _redeemerVerifier) {
+  constructor(uint8 _maxWaitlistSpots, address _lockerVerifierAddress, address _redeemerVerifierAddress) {
     maxWaitlistSpots = _maxWaitlistSpots;
-    lockerVerifier = _lockerVerifier;
-    redeemerVerifier = _redeemerVerifier;
+    lockerVerifier = IVerifier(_lockerVerifierAddress);
+    redeemerVerifier = IVerifier(_redeemerVerifierAddress);
     usedWaitlistSpots = 0;
     redeemedWaitlistSpots = 0;
     isLocked = false;
