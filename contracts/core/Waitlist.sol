@@ -107,7 +107,7 @@ contract Waitlist is IWaitlist {
     // Check that the public inputs used for the locker prover, 
     // i.e. the claimed commitments, are equal to the actual commitments
     for (uint i=0; i<numCommitments; i++) {
-      if (commitments[i] != pubSignals[i]) {
+      if (commitments[i] != pubSignals[i+1]) {
         return false;
       }
     }
@@ -119,7 +119,7 @@ contract Waitlist is IWaitlist {
 
     // Passed all checks, locking contract
     isLocked = true;
-    merkleRoot = pubSignals[numCommitments]; // Set Merkle root to be the output of the proof
+    merkleRoot = pubSignals[0]; // Set Merkle root to be the output of the proof, located at pubSignals[0]
     emit Lock(msg.sender, numCommitments, merkleRoot);
     return true;
   }
