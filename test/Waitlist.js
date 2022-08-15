@@ -13,6 +13,8 @@ const exampleCommitments = [EXAMPLE_COMMITMENT_1, EXAMPLE_COMMITMENT_2, EXAMPLE_
 // Locker proof/pubsignals for waitlist containing commitments 1 through 4
 const LOCKER_PROOF = "0x2d4cb0fec38e255c7a4e18e529b79be70d695c3a3e792e1f81d20aacd41053821b25072be8f42790724287e6bc7ddb4de1ff2d84868a28c34202e4954e5430a6180b58627af31bfad2cf3ee199c9dc15918b54f8f1fe8f623507a3e16147ef21244d5d0c8e2d5e074ae15e7ce04aebd294e86cd4184503dc1b01816cf667f815199032eda2807adcbd1d567d5c9ebe8a21a88f383196270b48588ba39e0bde4d075ec591d0c8da41746d292374be47779e832d7971a66afe86912a96be5ca62218ffa4df87c67d086693b45a1355297b3886859f5a1daea17158551d175324de29b56b7212f334cabd4d4c8cd4d5fbf368b0aee404224734f8278e32b66978df2abd80ebfed85e27f1b061f84e156acddacb4e4fddfa360e187ab5188a445b4605861c24fce9721c55a1340dd63c6502cae74366fd7b283f71af7140a41616791572ac6fa9796867956844295979913d62bc7d028c44e4be717146efb84d726f1d50ac5cc83865551e1cc453c16825cd9ec881e1270a8e987feb39f625aac4e310085f55e4ae36da10b885baf84d32029a04308f6e7b61672df00d263f64048b25d8d1dc8f5786006c3a2ff50f8f766c6198a3fc93ad00cb88f0535f3ed9f3fc21f407e40ee30121f755c1380857d7fb50f01eef7c9893004ba5dc0c5cd34fc0274a259985341171c91f43d4fadf68e3315e9f03ef5bfc6470d04e3a177042f5144dd24b0500073b8ac78ca6973ddd9a324570323f65057030e000efd97facbb0f81a36fbbd2390e934ff5bdbeda5a617533ef9f8cbe7abbc2d3ac41902ab2511c838915c613010df7c16c3118fdaecce95b771be3f61edc6c8b3f7c703e488e2650cc3ec58543bf539a8d9794a2946acd4340bf3cf90328f60367a096bdce2a2af67b6bd5c65973e79b4274f36e2aeed782bab44e30f714b7ab777bd24e77a72c9b29e95ca4d7fa9da86b7ac5820caae9b6a3d19ea28ecd45109ec8d1d9c6b1169da61ebc05802984b89947507d0387eae6d2d7bdb0c0a9841a778af9d41ca4087a17b970d8f902b16d5b5271a780b758a0e1da468b4138c0d0cb8890a408e01fd959e45cd9536341de1d1565ba61a98a8e06d6a0ebf58e58a8d507922174c2";
 const LOCKER_PUBSIGNALS = [ethers.BigNumber.from("0x276c5816c9a819950b7342bf9045e5ddfa8054aa213fd823d6ac694f1de13bb1"),ethers.BigNumber.from("0x09b058af3321f00792224af1cdc560b782e5234e9bf8e8312268dbd8c874d6e7"),ethers.BigNumber.from("0x2ce33859f1553917933b7488018d4974fc19b905ead27ad1480f1c7e6fe67003"),ethers.BigNumber.from("0x2ec1f039132828ca4116e876e325a405a6da7772d794f9a6e00710423752718f"),ethers.BigNumber.from("0x10a091773ed3e36f95562528043567f8d68c0454405bc778ba876265cf559c9b")];
+const INVALID_LOCKER_PUBSIGNALS_COMMITMENT = [ethers.BigNumber.from("0x276c5816c9a819950b7342bf9045e5ddfa8054aa213fd823d6ac694f1de13bb1"),ethers.BigNumber.from("0x19b058af3321f00792224af1cdc560b782e5234e9bf8e8312268dbd8c874d6e7"),ethers.BigNumber.from("0x2ce33859f1553917933b7488018d4974fc19b905ead27ad1480f1c7e6fe67003"),ethers.BigNumber.from("0x2ec1f039132828ca4116e876e325a405a6da7772d794f9a6e00710423752718f"),ethers.BigNumber.from("0x10a091773ed3e36f95562528043567f8d68c0454405bc778ba876265cf559c9b")];
+const INVALID_LOCKER_PUBSIGNALS_ROOT = [ethers.BigNumber.from("0x376c5816c9a819950b7342bf9045e5ddfa8054aa213fd823d6ac694f1de13bb1"),ethers.BigNumber.from("0x09b058af3321f00792224af1cdc560b782e5234e9bf8e8312268dbd8c874d6e7"),ethers.BigNumber.from("0x2ce33859f1553917933b7488018d4974fc19b905ead27ad1480f1c7e6fe67003"),ethers.BigNumber.from("0x2ec1f039132828ca4116e876e325a405a6da7772d794f9a6e00710423752718f"),ethers.BigNumber.from("0x10a091773ed3e36f95562528043567f8d68c0454405bc778ba876265cf559c9b")];
 const INVALID_LOCKER_PROOF = "0x3d4cb0fec38e255c7a4e18e529b79be70d695c3a3e792e1f81d20aacd41053821b25072be8f42790724287e6bc7ddb4de1ff2d84868a28c34202e4954e5430a6180b58627af31bfad2cf3ee199c9dc15918b54f8f1fe8f623507a3e16147ef21244d5d0c8e2d5e074ae15e7ce04aebd294e86cd4184503dc1b01816cf667f815199032eda2807adcbd1d567d5c9ebe8a21a88f383196270b48588ba39e0bde4d075ec591d0c8da41746d292374be47779e832d7971a66afe86912a96be5ca62218ffa4df87c67d086693b45a1355297b3886859f5a1daea17158551d175324de29b56b7212f334cabd4d4c8cd4d5fbf368b0aee404224734f8278e32b66978df2abd80ebfed85e27f1b061f84e156acddacb4e4fddfa360e187ab5188a445b4605861c24fce9721c55a1340dd63c6502cae74366fd7b283f71af7140a41616791572ac6fa9796867956844295979913d62bc7d028c44e4be717146efb84d726f1d50ac5cc83865551e1cc453c16825cd9ec881e1270a8e987feb39f625aac4e310085f55e4ae36da10b885baf84d32029a04308f6e7b61672df00d263f64048b25d8d1dc8f5786006c3a2ff50f8f766c6198a3fc93ad00cb88f0535f3ed9f3fc21f407e40ee30121f755c1380857d7fb50f01eef7c9893004ba5dc0c5cd34fc0274a259985341171c91f43d4fadf68e3315e9f03ef5bfc6470d04e3a177042f5144dd24b0500073b8ac78ca6973ddd9a324570323f65057030e000efd97facbb0f81a36fbbd2390e934ff5bdbeda5a617533ef9f8cbe7abbc2d3ac41902ab2511c838915c613010df7c16c3118fdaecce95b771be3f61edc6c8b3f7c703e488e2650cc3ec58543bf539a8d9794a2946acd4340bf3cf90328f60367a096bdce2a2af67b6bd5c65973e79b4274f36e2aeed782bab44e30f714b7ab777bd24e77a72c9b29e95ca4d7fa9da86b7ac5820caae9b6a3d19ea28ecd45109ec8d1d9c6b1169da61ebc05802984b89947507d0387eae6d2d7bdb0c0a9841a778af9d41ca4087a17b970d8f902b16d5b5271a780b758a0e1da468b4138c0d0cb8890a408e01fd959e45cd9536341de1d1565ba61a98a8e06d6a0ebf58e58a8d507922174c2";
 
 describe("Waitlist contract", function () {
@@ -142,6 +144,33 @@ describe("Waitlist contract", function () {
       waitlist.lock(LOCKER_PROOF, LOCKER_PUBSIGNALS);
       const join = waitlist.connect(signers[4]).join(EXAMPLE_COMMITMENT_5);
       await expect(join).to.not.emit(waitlist, "Join");
+    });
+
+    it("Should not lock the waitlist if claimed commitments are incorrect", async function () {
+      const {signers, waitlist} = await loadFixture(
+        deployAndAdd4PeopleToWaitlist
+      );
+
+      const lock = waitlist.lock(LOCKER_PROOF, INVALID_LOCKER_PUBSIGNALS_COMMITMENT);
+      await expect(lock).to.not.emit(waitlist, "Lock");
+    });
+
+    it("Should not lock the waitlist if claimed Merkle root is incorrect", async function () {
+      const {signers, waitlist} = await loadFixture(
+        deployAndAdd4PeopleToWaitlist
+      );
+
+      const lock = waitlist.lock(LOCKER_PROOF, INVALID_LOCKER_PUBSIGNALS_ROOT);
+      await expect(lock).to.not.emit(waitlist, "Lock");
+    });
+
+    it("Should not lock the waitlist if proof is invalid", async function () {
+      const {signers, waitlist} = await loadFixture(
+        deployAndAdd4PeopleToWaitlist
+      );
+
+      const lock = waitlist.lock(INVALID_LOCKER_PROOF, LOCKER_PUBSIGNALS);
+      await expect(lock).to.not.emit(waitlist, "Lock");
     });
   });
 });
