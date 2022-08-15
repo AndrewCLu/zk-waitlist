@@ -113,6 +113,18 @@ describe("Waitlist contract", function () {
       await expect(lock).to.not.emit(waitlist, "Lock");
     });
 
+    it("Should fail to lock the waitlist if the number of users is not a power of 2", async function () {
+      const {signers, waitlist} = await loadFixture(
+        deploy4PersonWaitlist
+      );
+
+      await waitlist.connect(signers[0]).join(EXAMPLE_COMMITMENT_1);
+      await waitlist.connect(signers[1]).join(EXAMPLE_COMMITMENT_2);
+      await waitlist.connect(signers[2]).join(EXAMPLE_COMMITMENT_3);
+      const lock = waitlist.lock(LOCKER_PROOF, LOCKER_PUBSIGNALS);
+      await expect(lock).to.not.emit(waitlist, "Lock");
+    });
+
     it("Should should correctly lock the waitlist if 4 people have joined", async function () {
       const {signers, waitlist} = await loadFixture(
         deployAndAdd4PeopleToWaitlist
@@ -120,6 +132,16 @@ describe("Waitlist contract", function () {
 
       const lock = waitlist.lock(LOCKER_PROOF, LOCKER_PUBSIGNALS);
       await expect(lock).to.emit(waitlist, "Lock").withArgs(signers[0].address, 4, LOCKER_PUBSIGNALS[0]);
+    });
+
+    it("Should not allow a user to join the locked waitlist", async function () {
+      const {signers, waitlist} = await loadFixture(
+        deployAndAdd4PeopleToWaitlist
+      );
+
+      waitlist.lock(LOCKER_PROOF, LOCKER_PUBSIGNALS);
+      const join = waitlist.connect(signers[4]).join(EXAMPLE_COMMITMENT_5);
+      await expect(join).to.not.emit(waitlist, "Join");
     });
   });
 });
