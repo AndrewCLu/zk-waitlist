@@ -138,16 +138,6 @@ describe("Waitlist contract", function () {
       await expect(lock).to.not.emit(waitlist, "Lock");
     });
 
-    it("Should fail to redeem if the waitlist is not yet locked", async function () {
-      const {signers, waitlist} = await loadFixture(
-        deploy4PersonWaitlist
-      );
-
-      waitlist.join(EXAMPLE_COMMITMENT_1);
-      const redeem = waitlist.redeem(REDEEMER_PROOF_1, REDEEMER_PUBSIGNALS_1);
-      await expect(redeem).to.not.emit(waitlist, "Redeem");
-    });
-
     it("Should should correctly lock the waitlist if 4 people have joined", async function () {
       const {signers, waitlist} = await loadFixture(
         deployAndAdd4PeopleToWaitlist
@@ -196,6 +186,16 @@ describe("Waitlist contract", function () {
   });
 
   describe("Redeem", function () {
+    it("Should fail to redeem if the waitlist is not yet locked", async function () {
+      const {signers, waitlist} = await loadFixture(
+        deploy4PersonWaitlist
+      );
+
+      waitlist.join(EXAMPLE_COMMITMENT_1);
+      const redeem = waitlist.redeem(REDEEMER_PROOF_1, REDEEMER_PUBSIGNALS_1);
+      await expect(redeem).to.not.emit(waitlist, "Redeem");
+    });
+    
     it("Should successfully redeem a valid waitlist spot", async function () {
       const {signers, waitlist} = await loadFixture(
         deployAndAdd4PeopleToWaitlist
