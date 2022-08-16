@@ -215,6 +215,18 @@ describe("Waitlist contract", function () {
       await expect(redeem_2).to.emit(waitlist, "Redeem").withArgs(signers[1].address, REDEEMER_NULLIFIER_2);
     });
 
+    it("Should allow the same user to redeem twice", async function () {
+      const {signers, waitlist} = await loadFixture(
+        deployAndAdd4PeopleToWaitlist
+      );
+
+      waitlist.lock(LOCKER_PROOF, LOCKER_PUBSIGNALS);
+      const redeem = waitlist.redeem(REDEEMER_PROOF_1, REDEEMER_PUBSIGNALS_1);
+      await expect(redeem).to.emit(waitlist, "Redeem").withArgs(signers[0].address, REDEEMER_NULLIFIER_1);
+      const redeem_2 = waitlist.redeem(REDEEMER_PROOF_2, REDEEMER_PUBSIGNALS_2);
+      await expect(redeem_2).to.emit(waitlist, "Redeem").withArgs(signers[0].address, REDEEMER_NULLIFIER_2);
+    });
+
     it("Should not redeem if a nullifier has been used already", async function () {
       const {signers, waitlist} = await loadFixture(
         deployAndAdd4PeopleToWaitlist
