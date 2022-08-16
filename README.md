@@ -15,3 +15,4 @@ Todo list:
 - Clean up Merkle tree proof logic
 - Add support for transfer proof (allow new merkle leaf to be "mixed in")
 - Set owner/admin in waitlist contract
+- How to avoid attacks where someone reads the redeem tx and sends a copy of the proof beforehand?

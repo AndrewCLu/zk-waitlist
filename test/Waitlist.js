@@ -23,6 +23,7 @@ const REDEEMER_NULLIFIER_1 = "98735732105984552084573131758293815515734610389461
 
 const REDEEMER_PROOF_2 = "0x07fdb104dab9993bb50a69618832ab8b6a29e75006e08f0c991b43006f5b137d0dab650d2b3a64fc58bbeb95b9c95399fa7826e113e3cb7ac1f35fb3db266b1b100a3654ac1074809aea15aed5c704bc015121a6b5a65575a4b7c37da7fd17d722afeb0d4f31199b6b573c281e6dd193e8e13c0217b72672ff9f8c622e2186f426d1ca16c45622b2e6f9c8f948e64fec9d22f17b66e3e22b3ec0594513e5783e007e4672f33f7f5cb9a778a8987d602cf179121510ea8ccd3a5e6cbb4b56c04a22213aa10fa71871ea395e69db9dd268ae74a1bea04892fcf402d53c33d6b0f2122123dab810cde476dcad7b482ae04bed394918b58ec71cd79e4f45b33009001bab1ccc762ba0b77dc815880719f7038ca34b8dd8217259c9314d3187a6b6461a8261ef8a613168495b7c645ebdfe2a1f390ad0682e432ecc4f618230a22f1604769bb15c7ec260a6da39cf8290025d2688e207e7094fea96b1392058442edb1a889906c885829438ee1cbbca83e92e72e3f9879c08df2530f00a6d5f14744e18972ef0793186d6a23879bce13ce4a5fc051008d07ae7799d4dce11c2d60bda0b45c84b20eb7cca7f56b40f83243bd243c649739bbf81de9ac9ad6b16cc91a7035abc05c858c5d161e61e3464262c51cde8ee810952ba1495871298be4d0e6806c3e970aaf82e602edaf9eaebd967723c032a24debb7962233c4ed395dbb815178954ea0f1682ed8026d8bcbef73a4f91713f15e1e21f6135f53dd2835f2a0627f766f1e063898f95e389b89380296ba56597dc9419b42812b83ab8d989b4c7271179e02b76045181c4be86fc105c90f0f453a334b893adc96e1331e794b6191da2b3630a2e0f83e1076e25d66347617604e4023a6be9dc8ec67a617192f762029699a40b7e55877c5b9f45cbdb107957e9305cabfc4590112580bff24a4fd50d664e816488bd204c2417a70abc3b1c65612115a31a6f55bed1e5bfed6f0e1d2cc0e8bb20ee0b3b11a94a2d0bd1ba8f04c6ac0b9ddeabf185d4701ebb65a55d15432e13147dd6bb4c605e6a95982d44b43bb0850d26875b74efe4b1bfb70eaa12c8d6f121b9db29a2192373e0a12fdcf47fbd389762fddb42ee690ee8a86906";
 const REDEEMER_PUBSIGNALS_2 = ["0x16dbe0601ada0d685f0d64ac6d5b82c9fe20f7dd9dd16900148141e9072434bc","0x276c5816c9a819950b7342bf9045e5ddfa8054aa213fd823d6ac694f1de13bb1"];
+const REDEEMER_NULLIFIER_2 = "10339370758182708972242003821912733314943307639842654974179105599767554831548";
 
 describe("Waitlist contract", function () {
   async function deploy4PersonWaitlist() {
@@ -47,16 +48,6 @@ describe("Waitlist contract", function () {
     await waitlist.connect(signers[1]).join(EXAMPLE_COMMITMENT_2);
     await waitlist.connect(signers[2]).join(EXAMPLE_COMMITMENT_3);
     await waitlist.connect(signers[3]).join(EXAMPLE_COMMITMENT_4);
-
-    return { signers, waitlist };
-  }
-
-  async function deployAndLock4PersonWaitlist() {
-    const { signers, waitlist } = await loadFixture(
-      deployAndAdd4PeopleToWaitlist
-    );
-
-    waitlist.lock(LOCKER_PROOF, LOCKER_PUBSIGNALS);
 
     return { signers, waitlist };
   }
@@ -204,11 +195,35 @@ describe("Waitlist contract", function () {
   describe("Redeem", function () {
     it("Should successfully redeem a valid waitlist spot", async function () {
       const {signers, waitlist} = await loadFixture(
-        deployAndLock4PersonWaitlist
+        deployAndAdd4PeopleToWaitlist
       );
 
+      waitlist.lock(LOCKER_PROOF, LOCKER_PUBSIGNALS);
       const redeem = waitlist.redeem(REDEEMER_PROOF_1, REDEEMER_PUBSIGNALS_1);
       await expect(redeem).to.emit(waitlist, "Redeem").withArgs(signers[0].address, REDEEMER_NULLIFIER_1);
+    });
+
+    it("Should successfully handle a second redemption", async function () {
+      const {signers, waitlist} = await loadFixture(
+        deployAndAdd4PeopleToWaitlist
+      );
+
+      waitlist.lock(LOCKER_PROOF, LOCKER_PUBSIGNALS);
+      const redeem = waitlist.redeem(REDEEMER_PROOF_1, REDEEMER_PUBSIGNALS_1);
+      await expect(redeem).to.emit(waitlist, "Redeem").withArgs(signers[0].address, REDEEMER_NULLIFIER_1);
+      const redeem_2 = waitlist.connect(signers[1]).redeem(REDEEMER_PROOF_2, REDEEMER_PUBSIGNALS_2);
+      await expect(redeem_2).to.emit(waitlist, "Redeem").withArgs(signers[1].address, REDEEMER_NULLIFIER_2);
+    });
+
+    it("Should not redeem if a nullifier has been used already", async function () {
+      const {signers, waitlist} = await loadFixture(
+        deployAndAdd4PeopleToWaitlist
+      );
+
+      waitlist.lock(LOCKER_PROOF, LOCKER_PUBSIGNALS);
+      waitlist.connect(signers[0]).redeem(REDEEMER_PROOF_1, REDEEMER_PUBSIGNALS_1);
+      const redeem_2 = waitlist.connect(signers[1]).redeem(REDEEMER_PROOF_1, REDEEMER_PUBSIGNALS_1);
+      await expect(redeem_2).to.not.emit(waitlist, "Redeem");
     });
   });
 });
