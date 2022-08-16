@@ -19,6 +19,7 @@ const INVALID_LOCKER_PROOF = "0x3d4cb0fec38e255c7a4e18e529b79be70d695c3a3e792e1f
 
 const REDEEMER_PROOF_1 = "0x1ea5409f9eb56c5ad1dcefa119206c8ecd4ffc363a3f09166d3482612326b73412c7151358f31008212b221e9ea5a2ee57388eccd1e47f324cc2ee7f252170a90b56361b83cc33e61d2b3be8a2c07b0ae36afbe09d431c7435d93cd5e79844670353da0ba7486f396aadb845ca707151c6438ebe8e5eaf4035d42f66522fbf622eba87c799d54d9b28b04566269e1103f9e44ad5d6b5d628be895bcc14c960702b54f2922ceb557d40f98b5b61bc053236b04750ba26e3f6bad32f93996680d425672eb27f423d78a1cfc962c277d58e9ee9cb4ca9a95a5ddbd51f7672d1fc08191eec3252e443f25532ed7af23181643237cb8e869859247e5dd10202dd37781f1a0a9ee68d1e7d8091fbbd5b7697be100785f6711999c7ec58e65a8e1fccf10ba6c5c4cc6c1cf43fa154fbe3555c199466542c3ae413f220c527cfc98d13ca2f10f9e5f99c7bd9a0ffd8ea78d8560784720f9c24afa14ff299591b498339022f57e55f1eeb55c84fd20b9fd33a9edfb9f9aac3db6163c85494240bd0113366057873c6c38f5b223a5535d154d50d402c800206eff7a4d59b63317464c628cf0e7562af7056026e58ddf719100e4058d116dc8bb607352144e0fe9977f59edb10b1da5ad37c68cc6935ed7023f4316e3a6352e2ee3f37e5a4984e47323c98641caab5b461729b13202cb27589e2c65b02898670cb5a45911d7990de9fbf35c3117a426397ea33408141773e0cf67b607cbfd6157fcb691926a2db4dcbe3831e01516906d745f699df44c7776506bdb831ff64059bedaad0d0f318fc86a5c22708f3b71cbc5dbcec1527e32a7c66335aa43a771f9dc89c0163de2c5a20f855712282dd5c3fd105201bc54b56fd1407c679c7f59a10508c884aaf2a7d50df764717a1339d40922beb5255c1890d8629b43aba8f9399ab0165469e25f18a069b91111a8716b35daf3974d5a9e3e111fb6d41cd808e5d97cb32a65a69a3903aa7e62df3005c4f217afa91475a7c96d8a334a1bec54cdc677f2b37ac5efd4220b2121a3d4c8559b3f804da65460fd27a682401b15d6068ac5abcebcd399fbb97746d06049ae81f4008ad27242b89776de99330b3efb137b3c97fb0f0489524152100";
 const REDEEMER_PUBSIGNALS_1 = ["0x15d43e90d1f4eb13959d17eb6453778007b6f24127495e0d49a0d43e1479b206","0x276c5816c9a819950b7342bf9045e5ddfa8054aa213fd823d6ac694f1de13bb1"];
+const REDEEMER_NULLIFIER_1 = "9873573210598455208457313175829381551573461038946183954309349153209518240262";
 
 const REDEEMER_PROOF_2 = "0x07fdb104dab9993bb50a69618832ab8b6a29e75006e08f0c991b43006f5b137d0dab650d2b3a64fc58bbeb95b9c95399fa7826e113e3cb7ac1f35fb3db266b1b100a3654ac1074809aea15aed5c704bc015121a6b5a65575a4b7c37da7fd17d722afeb0d4f31199b6b573c281e6dd193e8e13c0217b72672ff9f8c622e2186f426d1ca16c45622b2e6f9c8f948e64fec9d22f17b66e3e22b3ec0594513e5783e007e4672f33f7f5cb9a778a8987d602cf179121510ea8ccd3a5e6cbb4b56c04a22213aa10fa71871ea395e69db9dd268ae74a1bea04892fcf402d53c33d6b0f2122123dab810cde476dcad7b482ae04bed394918b58ec71cd79e4f45b33009001bab1ccc762ba0b77dc815880719f7038ca34b8dd8217259c9314d3187a6b6461a8261ef8a613168495b7c645ebdfe2a1f390ad0682e432ecc4f618230a22f1604769bb15c7ec260a6da39cf8290025d2688e207e7094fea96b1392058442edb1a889906c885829438ee1cbbca83e92e72e3f9879c08df2530f00a6d5f14744e18972ef0793186d6a23879bce13ce4a5fc051008d07ae7799d4dce11c2d60bda0b45c84b20eb7cca7f56b40f83243bd243c649739bbf81de9ac9ad6b16cc91a7035abc05c858c5d161e61e3464262c51cde8ee810952ba1495871298be4d0e6806c3e970aaf82e602edaf9eaebd967723c032a24debb7962233c4ed395dbb815178954ea0f1682ed8026d8bcbef73a4f91713f15e1e21f6135f53dd2835f2a0627f766f1e063898f95e389b89380296ba56597dc9419b42812b83ab8d989b4c7271179e02b76045181c4be86fc105c90f0f453a334b893adc96e1331e794b6191da2b3630a2e0f83e1076e25d66347617604e4023a6be9dc8ec67a617192f762029699a40b7e55877c5b9f45cbdb107957e9305cabfc4590112580bff24a4fd50d664e816488bd204c2417a70abc3b1c65612115a31a6f55bed1e5bfed6f0e1d2cc0e8bb20ee0b3b11a94a2d0bd1ba8f04c6ac0b9ddeabf185d4701ebb65a55d15432e13147dd6bb4c605e6a95982d44b43bb0850d26875b74efe4b1bfb70eaa12c8d6f121b9db29a2192373e0a12fdcf47fbd389762fddb42ee690ee8a86906";
 const REDEEMER_PUBSIGNALS_2 = ["0x16dbe0601ada0d685f0d64ac6d5b82c9fe20f7dd9dd16900148141e9072434bc","0x276c5816c9a819950b7342bf9045e5ddfa8054aa213fd823d6ac694f1de13bb1"];
@@ -46,6 +47,16 @@ describe("Waitlist contract", function () {
     await waitlist.connect(signers[1]).join(EXAMPLE_COMMITMENT_2);
     await waitlist.connect(signers[2]).join(EXAMPLE_COMMITMENT_3);
     await waitlist.connect(signers[3]).join(EXAMPLE_COMMITMENT_4);
+
+    return { signers, waitlist };
+  }
+
+  async function deployAndLock4PersonWaitlist() {
+    const { signers, waitlist } = await loadFixture(
+      deployAndAdd4PeopleToWaitlist
+    );
+
+    waitlist.lock(LOCKER_PROOF, LOCKER_PUBSIGNALS);
 
     return { signers, waitlist };
   }
@@ -133,6 +144,16 @@ describe("Waitlist contract", function () {
       await expect(lock).to.not.emit(waitlist, "Lock");
     });
 
+    it("Should fail to redeem if the waitlist is not yet locked", async function () {
+      const {signers, waitlist} = await loadFixture(
+        deploy4PersonWaitlist
+      );
+
+      waitlist.join(EXAMPLE_COMMITMENT_1);
+      const redeem = waitlist.redeem(REDEEMER_PROOF_1, REDEEMER_PUBSIGNALS_1);
+      await expect(redeem).to.not.emit(waitlist, "Redeem");
+    });
+
     it("Should should correctly lock the waitlist if 4 people have joined", async function () {
       const {signers, waitlist} = await loadFixture(
         deployAndAdd4PeopleToWaitlist
@@ -181,14 +202,13 @@ describe("Waitlist contract", function () {
   });
 
   describe("Redeem", function () {
-    it("Should fail to redeem if the waitlist is not yet locked", async function () {
+    it("Should successfully redeem a valid waitlist spot", async function () {
       const {signers, waitlist} = await loadFixture(
-        deploy4PersonWaitlist
+        deployAndLock4PersonWaitlist
       );
 
-      waitlist.join(EXAMPLE_COMMITMENT_1);
       const redeem = waitlist.redeem(REDEEMER_PROOF_1, REDEEMER_PUBSIGNALS_1);
-      await expect(redeem).to.not.emit(waitlist, "Redeem");
+      await expect(redeem).to.emit(waitlist, "Redeem").withArgs(signers[0].address, REDEEMER_NULLIFIER_1);
     });
   });
 });
