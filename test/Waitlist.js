@@ -188,14 +188,13 @@ describe("Waitlist contract", function () {
   describe("Redeem", function () {
     it("Should fail to redeem if the waitlist is not yet locked", async function () {
       const {signers, waitlist} = await loadFixture(
-        deploy4PersonWaitlist
+        deployAndAdd4PeopleToWaitlist
       );
 
-      waitlist.join(EXAMPLE_COMMITMENT_1);
       const redeem = waitlist.redeem(REDEEMER_PROOF_1, REDEEMER_PUBSIGNALS_1);
       await expect(redeem).to.not.emit(waitlist, "Redeem");
     });
-    
+
     it("Should successfully redeem a valid waitlist spot", async function () {
       const {signers, waitlist} = await loadFixture(
         deployAndAdd4PeopleToWaitlist
