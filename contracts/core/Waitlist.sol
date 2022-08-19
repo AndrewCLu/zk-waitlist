@@ -59,6 +59,7 @@ contract Waitlist is IWaitlist {
     // TODO: Can we ensure that the verifier contracts are the correct ones with the right parameters (merkle tree depth, etc.)?
   }
 
+  // Attempts to join a waitlist for the current user using a commitment that can later be opened
   function join(uint commitment) public returns (bool) {
     // Waitlist is locked
     if (isLocked) {
@@ -87,6 +88,7 @@ contract Waitlist is IWaitlist {
     }
   }
 
+  // Locks the waitlist so that no more users can join
   function lock(
     bytes memory proof, 
     uint[] memory pubSignals
@@ -124,6 +126,7 @@ contract Waitlist is IWaitlist {
     return true;
   }
 
+  // Redeems a spot on the waitlist if a valid proof is provided of the secret used to generate a commitment
   function redeem(
     bytes memory proof, 
     uint[] memory pubSignals

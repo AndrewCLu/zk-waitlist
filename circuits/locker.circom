@@ -10,12 +10,14 @@ template Locker(N) { // N is the number of commitments that have been made
   signal merkle_tree_nodes[2*N-1]; // Represents all the nodes of the Merkle tree, including leaves
   component merkle_hashers[2*N-1]; // Poseidon hashers that generate the Merkle nodes
 
+  // Hashes the commitments into Merkle leaves
   for (var i=0; i<N; i++) {
     merkle_hashers[i] = Poseidon(1);
     merkle_hashers[i].inputs[0] <== commitments[i];
     merkle_tree_nodes[i] <== merkle_hashers[i].out;
   }
 
+  // Generates the Merkle tree
   var node_to_hash = 0;
   for (var j=N; j<2*N-1; j++) {
     merkle_hashers[j] = Poseidon(2);

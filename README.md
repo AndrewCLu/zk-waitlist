@@ -1,4 +1,4 @@
-# ZK Attestations
+# ZK Waitlist
 
 PoC: Create a smart contract where users can claim their spot on a waitlist, and then later anonymously prove that they had previously joined the waitlist.
 
