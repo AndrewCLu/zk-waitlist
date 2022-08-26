@@ -18,6 +18,7 @@
   "homepage": "https://github.com/AndrewCLu/zk-attestations#readme",
   "dependencies": {
     "circomlib": "^2.0.5",
+    "dotenv": "^16.0.1",
     "ethers": "^5.6.9"
   },
   "devDependencies": {
