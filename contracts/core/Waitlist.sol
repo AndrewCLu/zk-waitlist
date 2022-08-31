@@ -53,6 +53,14 @@ contract Waitlist is IWaitlist {
     isLocked = false;
   }
 
+  function getNumCommitments() public view returns(uint) {
+    return commitments.length;
+  }
+
+  function getNumNullifiers() public view returns(uint) {
+    return nullifiers.length;
+  }
+
   // Joins the waitlist using a commitment provided by the user
   function join(uint commitment) public {
     uint usedWaitlistSpots = commitments.length;
