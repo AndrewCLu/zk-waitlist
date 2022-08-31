@@ -11,5 +11,5 @@ interface IWaitlist {
   function redeem(
     bytes memory proof, 
     uint[] memory pubSignals
-  ) external returns (bool);
+  ) external;
 }

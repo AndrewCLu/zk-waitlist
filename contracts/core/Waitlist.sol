@@ -68,7 +68,8 @@ contract Waitlist is IWaitlist {
     emit Join(msg.sender, usedWaitlistSpots + 1, commitment);
   }
 
-  // Locks the waitlist so that no more users can join
+  // Locks the waitlist using a proof of the Merkle root derived from all commitments
+  // Locking disables the ability to claim new spots and enables redemptions
   function lock(
     bytes memory proof, 
     uint[] memory pubSignals
@@ -88,38 +89,20 @@ contract Waitlist is IWaitlist {
     emit Lock(msg.sender, numCommitments, merkleRoot);
   }
 
-  // Redeems a spot on the waitlist if a valid proof is provided of the secret used to generate a commitment
+  // Redeems a spot on the waitlist given a valid proof of the secret used to generate a commitment
   function redeem(
     bytes memory proof, 
     uint[] memory pubSignals
-  ) public returns (bool) {
-    // Waitlist has not been locked yet
-    if (!isLocked) {
-      return false;
-    }
-
+  ) public {
     uint nullifier = pubSignals[0];
     uint proofMerkleRoot = pubSignals[1];
+    require(isLocked, "Waitlist has not been locked.");
+    require(!usedNullifiers[nullifier], "Nullifier has already been used.");
+    require(proofMerkleRoot == merkleRoot, "Merkle root used in proof is incorrect.");
+    require(redeemerVerifier.verifyProof(proof, pubSignals), "Redeeming proof is invalid.");
 
-    // Nullifier has already been used
-    if (usedNullifiers[nullifier]) {
-      return false; 
-    }
-
-    // Check claimed Merkle root is equal to the current one
-    if (proofMerkleRoot != merkleRoot) {
-      return false;
-    }
-
-    // Verify proof of nullifier and Merkle root is correct
-    if (!redeemerVerifier.verifyProof(proof, pubSignals)) {
-      return false;
-    }
-
-    // Passed all checks, redeeming spot on waitlist
     usedNullifiers[nullifier] = true;
     nullifiers.push(nullifier);
     emit Redeem(msg.sender, nullifier);
-    return true;
   }
 }
