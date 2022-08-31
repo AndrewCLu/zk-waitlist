@@ -10,7 +10,7 @@ contract Waitlist is IWaitlist {
   // Mapping of users on the waitlist
   mapping(address => bool) internal waitlistedUsers;
 
-  // List of public commitments from waitlisted users
+  // List of commitments from waitlisted users
   uint[] public commitments;
 
   // Whether or not the waitlist has been locked
@@ -19,11 +19,11 @@ contract Waitlist is IWaitlist {
   // Root of the Merkle tree
   uint public merkleRoot;
 
-  // Number of users who have redeemed their spot on the waitlist
-  uint redeemedWaitlistSpots;
-
   // Mapping of nullifiers that have been used
   mapping(uint => bool) internal usedNullifiers;
+
+  // List of nullifiers that have been redeemed
+  uint[] public nullifiers;
 
   // Contract to verify waitlist locking proofs
   IVerifier public immutable lockerVerifier;
@@ -50,7 +50,6 @@ contract Waitlist is IWaitlist {
     maxWaitlistSpots = _maxWaitlistSpots;
     lockerVerifier = IVerifier(_lockerVerifierAddress);
     redeemerVerifier = IVerifier(_redeemerVerifierAddress);
-    redeemedWaitlistSpots = 0;
     isLocked = false;
     // TODO: Can we ensure that the verifier contracts are the correct ones with the right parameters (merkle tree depth, etc.)?
   }
@@ -151,7 +150,7 @@ contract Waitlist is IWaitlist {
 
     // Passed all checks, redeeming spot on waitlist
     usedNullifiers[nullifier] = true;
-    redeemedWaitlistSpots++;
+    nullifiers.push(nullifier);
     emit Redeem(msg.sender, nullifier);
     return true;
   }
