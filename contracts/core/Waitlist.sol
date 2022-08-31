@@ -33,7 +33,7 @@ contract Waitlist is IWaitlist {
 
   event Join(
     address indexed joiner,
-    uint waitlistNumber, // Joiner's number on the waitlist
+    uint indexed waitlistNumber,
     uint commitment
   );
   event Lock(
@@ -72,38 +72,20 @@ contract Waitlist is IWaitlist {
   function lock(
     bytes memory proof, 
     uint[] memory pubSignals
-  ) public returns (bool) {
-    // Waitlist is already locked
-    if (isLocked) {
-      return false;
-    } 
-
+  ) public {
     uint numCommitments = commitments.length;
-    // There are either no commitments or the number of commitments is not a power of 2
+    require(!isLocked, "Waitlist is already locked.");
     // Note: The current locker verifier circuit requires the number of commitments to be a power of 2
     // TODO: Remove this constraint, possibly by adding extra Merkle leaves
-    if (numCommitments == 0 || (numCommitments & (numCommitments - 1)) != 0) {
-      return false;
-    }
-
-    // Check that the public inputs used for the locker prover, 
-    // i.e. the claimed commitments, are equal to the actual commitments
+    require(numCommitments != 0 && (numCommitments & (numCommitments - 1)) == 0, "Waitlist must have a number of users equal to a nonzero power of 2 to be locked.");
     for (uint i=0; i<numCommitments; i++) {
-      if (commitments[i] != pubSignals[i+1]) {
-        return false;
-      }
+      require(commitments[i] == pubSignals[i+1], "Wrong commitments used to generate locking proof.");
     }
+    require(lockerVerifier.verifyProof(proof, pubSignals), "Locking proof is invalid.");
 
-    // Verify proof of Merkle root is correct
-    if (!lockerVerifier.verifyProof(proof, pubSignals)) {
-      return false;
-    }
-
-    // Passed all checks, locking contract
     isLocked = true;
-    merkleRoot = pubSignals[0]; // Set Merkle root to be the output of the proof, located at pubSignals[0]
+    merkleRoot = pubSignals[0]; // Merkle root is returned as a public output of the proof
     emit Lock(msg.sender, numCommitments, merkleRoot);
-    return true;
   }
 
   // Redeems a spot on the waitlist if a valid proof is provided of the secret used to generate a commitment
