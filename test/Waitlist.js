@@ -8,8 +8,6 @@ const EXAMPLE_COMMITMENT_3 = ethers.BigNumber.from("2114905047619012593804604945
 const EXAMPLE_COMMITMENT_4 = ethers.BigNumber.from("7520705075767269653587126815629426321631492132326730479313166771059204398235");  // For secret = 69420
 const EXAMPLE_COMMITMENT_5 = ethers.BigNumber.from("4062130046788682276592684126400580992160311099061031008181023682089773591896");  // For secret = 42
 
-const exampleCommitments = [EXAMPLE_COMMITMENT_1, EXAMPLE_COMMITMENT_2, EXAMPLE_COMMITMENT_3, EXAMPLE_COMMITMENT_4];
-
 // Locker proof/pubsignals for waitlist containing commitments 1 through 4
 const LOCKER_PROOF = "0x084d0c2e95d87bafa6a98239db41b5096e956b1bd89a3b10d17089c7e47236af20c0c9a244723614af2796c4341bf8388f6f0d0e897bf2e7b513b3b8e7a60bf0139e12f6e1b1db51eea998e1bb4ae3f0135cacd39d42dc14e08d10575f45f43b077ce4a3d06b4fcc30bc976e98b08d1cebad6426199f2c3526766d348560b8bb156039320fdd2df41906b389324877112e180f0ebed9490195b7c4e0e38b47c11ab179aacfbd5a722c3863bdc554ff5d78fabb3ac22e7218eb55e86a178dc7c11448a43d651c7d98267bf239aca8c5c226b49d872b892d58bc480d40a35b833e09648aa3f1ac06d1b01211f2065a70950d0fedbd7dcee02e959d366b6b7a40e21a5c029ea2a1cb7b182495cb6c208a6c649a6b021127c939226bbd122918e8a62acbb48ab40bbba3f8ee7a4c593229dd777e2e90b124f43b319bcf5ad218e89022f146b2d9e9117e680df3d6b005b53a1efc5b122b1eb953353634ff4c7ee8e91884771fa6c836e47184496436ba9a51767a77baa6435383d3f5635f8797a4470cf1f0af16032f352e9e4a9720bef40d9635f078ba56f18ec1a5c6b847858ea51b39adc392fbf4a3f40d33bb11f8478dc825a4908e367e5f5e3c682440852b81265323a8feb626684282b6814a2dc99220c66e776a4a652d73076a6c286b137f008bd5782f6e520919096fe9e93e42031fe909575468876013446d75dc0e0be018b4af8cc3395fd2d450dcd97c75dc7b04afea36a259beafcc743c86681bd9182bf05eb190b5453c8bfd5695e2f66c37b15004819145be3d944b9e469840ff1811d6357e94adfc4f0bda5d5254ca601dd7881d1dee30001dfaa231a575f5456620885d1b580c6a140478d2d4cd093626dfaaab424c07cd5321e14bed9a86c1302cde186372683567da6bfdd0409e170239f5a8d9d7105c501a467b1582de543d095aa603b8b0e5da7b31466bd6483234c90469a44d0097af55893c0d8b0e9a670f518dc1f46f77c2471dcdc3b492cd69f18bc1058f20c637dbb32261b5a372c329dfe2596af81b3e0b23e879daef5b6ac1c4b757ebb59df014d90759072c07540296458c3bef9b027728188210381ea4060b57f432b964ec9d8d21c6e8c7812d";
 const LOCKER_PUBSIGNALS = [ethers.BigNumber.from("0x276c5816c9a819950b7342bf9045e5ddfa8054aa213fd823d6ac694f1de13bb1"),ethers.BigNumber.from("0x09b058af3321f00792224af1cdc560b782e5234e9bf8e8312268dbd8c874d6e7"),ethers.BigNumber.from("0x2ce33859f1553917933b7488018d4974fc19b905ead27ad1480f1c7e6fe67003"),ethers.BigNumber.from("0x2ec1f039132828ca4116e876e325a405a6da7772d794f9a6e00710423752718f"),ethers.BigNumber.from("0x10a091773ed3e36f95562528043567f8d68c0454405bc778ba876265cf559c9b")];
@@ -57,7 +55,7 @@ describe("Waitlist contract", function () {
 
   describe("Deployment", function () {
     it("Should deploy successfully", async function () {
-      const {signers, waitlist} = await loadFixture(
+      const {waitlist} = await loadFixture(
         deploy4PersonWaitlist
       );
 
@@ -84,7 +82,7 @@ describe("Waitlist contract", function () {
       const join1 = waitlist.join(EXAMPLE_COMMITMENT_1);
       await expect(join1).to.emit(waitlist, "Join").withArgs(signers[0].address, 1, EXAMPLE_COMMITMENT_1);
       const join2 = waitlist.join(EXAMPLE_COMMITMENT_2);
-      await expect(join2).to.not.emit(waitlist, "Join");
+      await expect(join2).to.be.revertedWith("User has already signed up for waitlist.");
     });
 
     it("Should not allow the same commitment to be used twice", async function () {
@@ -95,7 +93,7 @@ describe("Waitlist contract", function () {
       const join1 = waitlist.connect(signers[0]).join(EXAMPLE_COMMITMENT_1);
       await expect(join1).to.emit(waitlist, "Join").withArgs(signers[0].address, 1, EXAMPLE_COMMITMENT_1);
       const join2 = waitlist.connect(signers[1]).join(EXAMPLE_COMMITMENT_1);
-      await expect(join2).to.not.emit(waitlist, "Join");
+      await expect(join2).to.be.revertedWith("Commitment has already been used.");
     });
 
     it("Should not allow a user to join the waitlist if it is full", async function () {
@@ -112,18 +110,18 @@ describe("Waitlist contract", function () {
       const join4 = waitlist.connect(signers[3]).join(EXAMPLE_COMMITMENT_4);
       await expect(join4).to.emit(waitlist, "Join").withArgs(signers[3].address, 4, EXAMPLE_COMMITMENT_4);
       const join5 = waitlist.connect(signers[4]).join(EXAMPLE_COMMITMENT_5);
-      await expect(join5).to.not.emit(waitlist, "Join");
+      await expect(join5).to.be.revertedWith("Waitlist is full.");
     });
   });
 
   describe("Lock", function () {
     it("Should fail to lock the waitlist if nobody has joined", async function () {
-      const {signers, waitlist} = await loadFixture(
+      const {waitlist} = await loadFixture(
         deploy4PersonWaitlist
       );
 
       const lock = waitlist.lock(LOCKER_PROOF, LOCKER_PUBSIGNALS);
-      await expect(lock).to.not.emit(waitlist, "Lock");
+      await expect(lock).to.be.revertedWith("Waitlist must have a number of users equal to a nonzero power of 2 to be locked.");
     });
 
     it("Should fail to lock the waitlist if the number of users is not a power of 2", async function () {
@@ -135,7 +133,7 @@ describe("Waitlist contract", function () {
       await waitlist.connect(signers[1]).join(EXAMPLE_COMMITMENT_2);
       await waitlist.connect(signers[2]).join(EXAMPLE_COMMITMENT_3);
       const lock = waitlist.lock(LOCKER_PROOF, LOCKER_PUBSIGNALS);
-      await expect(lock).to.not.emit(waitlist, "Lock");
+      await expect(lock).to.be.revertedWith("Waitlist must have a number of users equal to a nonzero power of 2 to be locked.");
     });
 
     it("Should should correctly lock the waitlist if 4 people have joined", async function () {
@@ -158,45 +156,45 @@ describe("Waitlist contract", function () {
 
       waitlist.lock(LOCKER_PROOF, LOCKER_PUBSIGNALS);
       const join = waitlist.connect(signers[4]).join(EXAMPLE_COMMITMENT_5);
-      await expect(join).to.not.emit(waitlist, "Join");
+      await expect(join).to.be.revertedWith("Waitlist is locked.");
     });
 
     it("Should not lock the waitlist if claimed commitments are incorrect", async function () {
-      const {signers, waitlist} = await loadFixture(
+      const {waitlist} = await loadFixture(
         deployAndAdd4PeopleToWaitlist
       );
 
       const lock = waitlist.lock(LOCKER_PROOF, INVALID_LOCKER_PUBSIGNALS_COMMITMENT);
-      await expect(lock).to.not.emit(waitlist, "Lock");
+      await expect(lock).to.be.revertedWith("Wrong commitments used to generate locking proof.");
     });
 
     it("Should not lock the waitlist if claimed Merkle root is incorrect", async function () {
-      const {signers, waitlist} = await loadFixture(
+      const {waitlist} = await loadFixture(
         deployAndAdd4PeopleToWaitlist
       );
 
       const lock = waitlist.lock(LOCKER_PROOF, INVALID_LOCKER_PUBSIGNALS_ROOT);
-      await expect(lock).to.not.emit(waitlist, "Lock");
+      await expect(lock).to.be.revertedWith("Locking proof is invalid.");
     });
 
     it("Should not lock the waitlist if proof is invalid", async function () {
-      const {signers, waitlist} = await loadFixture(
+      const {waitlist} = await loadFixture(
         deployAndAdd4PeopleToWaitlist
       );
 
       const lock = waitlist.lock(INVALID_LOCKER_PROOF, LOCKER_PUBSIGNALS);
-      await expect(lock).to.not.emit(waitlist, "Lock");
+      await expect(lock).to.be.revertedWith("Locking proof is invalid.");
     });
   });
 
   describe("Redeem", function () {
     it("Should fail to redeem if the waitlist is not yet locked", async function () {
-      const {signers, waitlist} = await loadFixture(
+      const {waitlist} = await loadFixture(
         deployAndAdd4PeopleToWaitlist
       );
 
       const redeem = waitlist.redeem(REDEEMER_PROOF_1, REDEEMER_PUBSIGNALS_1);
-      await expect(redeem).to.not.emit(waitlist, "Redeem");
+      await expect(redeem).to.be.revertedWith("Waitlist has not been locked.");
     });
 
     it("Should successfully redeem a valid waitlist spot", async function () {
@@ -241,37 +239,37 @@ describe("Waitlist contract", function () {
       waitlist.lock(LOCKER_PROOF, LOCKER_PUBSIGNALS);
       waitlist.connect(signers[0]).redeem(REDEEMER_PROOF_1, REDEEMER_PUBSIGNALS_1);
       const redeem_2 = waitlist.connect(signers[1]).redeem(REDEEMER_PROOF_1, REDEEMER_PUBSIGNALS_1);
-      await expect(redeem_2).to.not.emit(waitlist, "Redeem");
+      await expect(redeem_2).to.be.revertedWith("Nullifier has already been used.");
     });
 
     it("Should not redeem if the proof is invalid", async function () {
-      const {signers, waitlist} = await loadFixture(
+      const {waitlist} = await loadFixture(
         deployAndAdd4PeopleToWaitlist
       );
 
       waitlist.lock(LOCKER_PROOF, LOCKER_PUBSIGNALS);
       const redeem = waitlist.redeem(INVALID_REDEEMER_PROOF, REDEEMER_PUBSIGNALS_1);
-      await expect(redeem).to.not.emit(waitlist, "Redeem");
+      await expect(redeem).to.be.revertedWith("Redeeming proof is invalid.");
     });
 
     it("Should not redeem if the claimed nullifier is invalid", async function () {
-      const {signers, waitlist} = await loadFixture(
+      const {waitlist} = await loadFixture(
         deployAndAdd4PeopleToWaitlist
       );
 
       waitlist.lock(LOCKER_PROOF, LOCKER_PUBSIGNALS);
       const redeem = waitlist.redeem(REDEEMER_PROOF_1, INVALID_REDEEMER_PUBSIGNALS_NULLIFIER);
-      await expect(redeem).to.not.emit(waitlist, "Redeem");
+      await expect(redeem).to.be.revertedWith("Redeeming proof is invalid.");
     });
 
     it("Should not redeem if the claimed Merkle root is invalid", async function () {
-      const {signers, waitlist} = await loadFixture(
+      const {waitlist} = await loadFixture(
         deployAndAdd4PeopleToWaitlist
       );
 
       waitlist.lock(LOCKER_PROOF, LOCKER_PUBSIGNALS);
       const redeem = waitlist.redeem(REDEEMER_PROOF_1, INVALID_REDEEMER_PUBSIGNALS_ROOT);
-      await expect(redeem).to.not.emit(waitlist, "Redeem");
+      await expect(redeem).to.be.revertedWith("Merkle root used in proof is incorrect.");
     });
   });
 });
