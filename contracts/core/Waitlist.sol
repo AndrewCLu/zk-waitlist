@@ -51,35 +51,21 @@ contract Waitlist is IWaitlist {
     lockerVerifier = IVerifier(_lockerVerifierAddress);
     redeemerVerifier = IVerifier(_redeemerVerifierAddress);
     isLocked = false;
-    // TODO: Can we ensure that the verifier contracts are the correct ones with the right parameters (merkle tree depth, etc.)?
   }
 
-  // Attempts to join a waitlist for the current user using a commitment that can later be opened
-  function join(uint commitment) public returns (bool) {
+  // Joins the waitlist using a commitment provided by the user
+  function join(uint commitment) public {
     uint usedWaitlistSpots = commitments.length;
-    // Waitlist is locked
-    if (isLocked) {
-      return false;
-    // User is already on waitlist
-    } else if (waitlistedUsers[msg.sender]) {
-      return false;
-    // Waitlist is full
-    } else if (usedWaitlistSpots >= maxWaitlistSpots) {
-      return false;
-    } else {
-      // Commitment has already been used, user must choose a new secret
-      for (uint i=0; i < commitments.length; i++) {
-        if (commitment == commitments[i]) {
-          return false;
-        }
-      }
-
-      // Passed all checks, adding user to waitlist
-      waitlistedUsers[msg.sender] = true;
-      commitments.push(commitment);
-      emit Join(msg.sender, usedWaitlistSpots + 1, commitment);
-      return true;
+    require(!isLocked, "Waitlist is locked.");
+    require(!waitlistedUsers[msg.sender], "User has already signed up for waitlist.");
+    require(usedWaitlistSpots < maxWaitlistSpots, "Waitlist is full.");
+    for (uint i=0; i < usedWaitlistSpots; i++) {
+      require(commitment != commitments[i], "Commitment has already been used.");
     }
+
+    waitlistedUsers[msg.sender] = true;
+    commitments.push(commitment);
+    emit Join(msg.sender, usedWaitlistSpots + 1, commitment);
   }
 
   // Locks the waitlist so that no more users can join
