@@ -7,9 +7,6 @@ contract Waitlist is IWaitlist {
   // Max number of users allowed on the waitlist
   uint8 public maxWaitlistSpots;
 
-  // Current number of users on waitlist
-  uint8 public usedWaitlistSpots;
-
   // Mapping of users on the waitlist
   mapping(address => bool) internal waitlistedUsers;
 
@@ -36,7 +33,7 @@ contract Waitlist is IWaitlist {
 
   event Join(
     address indexed joiner,
-    uint8 waitlistNumber, // Joiner's number on the waitlist
+    uint waitlistNumber, // Joiner's number on the waitlist
     uint commitment
   );
   event Lock(
@@ -53,7 +50,6 @@ contract Waitlist is IWaitlist {
     maxWaitlistSpots = _maxWaitlistSpots;
     lockerVerifier = IVerifier(_lockerVerifierAddress);
     redeemerVerifier = IVerifier(_redeemerVerifierAddress);
-    usedWaitlistSpots = 0;
     redeemedWaitlistSpots = 0;
     isLocked = false;
     // TODO: Can we ensure that the verifier contracts are the correct ones with the right parameters (merkle tree depth, etc.)?
@@ -61,6 +57,7 @@ contract Waitlist is IWaitlist {
 
   // Attempts to join a waitlist for the current user using a commitment that can later be opened
   function join(uint commitment) public returns (bool) {
+    uint usedWaitlistSpots = commitments.length;
     // Waitlist is locked
     if (isLocked) {
       return false;
@@ -79,11 +76,9 @@ contract Waitlist is IWaitlist {
       }
 
       // Passed all checks, adding user to waitlist
-      usedWaitlistSpots++;
       waitlistedUsers[msg.sender] = true;
-      // TODO: Basic checks on commitment
       commitments.push(commitment);
-      emit Join(msg.sender, usedWaitlistSpots, commitment);
+      emit Join(msg.sender, usedWaitlistSpots + 1, commitment);
       return true;
     }
   }
