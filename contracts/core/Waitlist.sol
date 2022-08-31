@@ -5,7 +5,7 @@ import "../interfaces/IVerifier.sol";
 
 contract Waitlist is IWaitlist {
   // Max number of users allowed on the waitlist
-  uint8 public maxWaitlistSpots;
+  uint public maxWaitlistSpots;
 
   // Mapping of users on the waitlist
   mapping(address => bool) internal waitlistedUsers;
@@ -20,7 +20,7 @@ contract Waitlist is IWaitlist {
   uint public merkleRoot;
 
   // Number of users who have redeemed their spot on the waitlist
-  uint8 redeemedWaitlistSpots;
+  uint redeemedWaitlistSpots;
 
   // Mapping of nullifiers that have been used
   mapping(uint => bool) internal usedNullifiers;
@@ -38,7 +38,7 @@ contract Waitlist is IWaitlist {
   );
   event Lock(
     address locker,
-    uint numWaitlistedUsers, // TODO: This can be a uint8
+    uint numWaitlistedUsers, 
     uint merkleRoot
   );
   event Redeem(
@@ -46,7 +46,7 @@ contract Waitlist is IWaitlist {
     uint nullifier
   );
 
-  constructor(uint8 _maxWaitlistSpots, address _lockerVerifierAddress, address _redeemerVerifierAddress) {
+  constructor(uint _maxWaitlistSpots, address _lockerVerifierAddress, address _redeemerVerifierAddress) {
     maxWaitlistSpots = _maxWaitlistSpots;
     lockerVerifier = IVerifier(_lockerVerifierAddress);
     redeemerVerifier = IVerifier(_redeemerVerifierAddress);
