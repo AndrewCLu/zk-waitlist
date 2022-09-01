@@ -33,17 +33,14 @@ contract Waitlist is IWaitlist {
 
   event Join(
     address indexed joiner,
-    uint indexed waitlistNumber,
-    uint commitment
+    uint indexed commitment
   );
   event Lock(
-    address locker,
-    uint numWaitlistedUsers, 
-    uint merkleRoot
+    address indexed locker
   );
   event Redeem(
     address indexed redeemer,
-    uint nullifier
+    uint indexed nullifier
   );
 
   constructor(uint _maxWaitlistSpots, address _lockerVerifierAddress, address _redeemerVerifierAddress) {
@@ -73,7 +70,7 @@ contract Waitlist is IWaitlist {
 
     waitlistedUsers[msg.sender] = true;
     commitments.push(commitment);
-    emit Join(msg.sender, usedWaitlistSpots + 1, commitment);
+    emit Join(msg.sender, commitment);
   }
 
   // Locks the waitlist using a proof of the Merkle root derived from all commitments
@@ -94,7 +91,7 @@ contract Waitlist is IWaitlist {
 
     isLocked = true;
     merkleRoot = pubSignals[0]; // Merkle root is returned as a public output of the proof
-    emit Lock(msg.sender, numCommitments, merkleRoot);
+    emit Lock(msg.sender);
   }
 
   // Redeems a spot on the waitlist given a valid proof of the secret used to generate a commitment
