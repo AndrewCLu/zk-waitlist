@@ -3,8 +3,8 @@ pragma circom 2.0.0;
 include "../node_modules/circomlib/circuits/poseidon.circom";
 
 // Allows a user to lock the waitlist once they prove they have computed the Merkle root of the commitment tree correctly
-// TODO: This circuit assumes that N is a POWER OF 2. Need to add a check to ensure this is the case.
-template Locker(N) { // N is the number of commitments that have been made
+// N is the number of commitments that have been made. Currently we require that N is a power of 2 to build a full Merkle tree
+template Locker(N) { 
   signal input commitments[N]; 
   signal output merkle_root;
   signal merkle_tree_nodes[2*N-1]; // Represents all the nodes of the Merkle tree, including leaves
@@ -27,7 +27,8 @@ template Locker(N) { // N is the number of commitments that have been made
     node_to_hash += 2;
   }
 
-  merkle_root <== merkle_tree_nodes[2*N-2]; // The Merkle root is the last node
+  // The Merkle root is the last node
+  merkle_root <== merkle_tree_nodes[2*N-2]; 
 }
 
 component main {public [commitments]} = Locker(4);

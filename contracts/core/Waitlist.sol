@@ -81,8 +81,7 @@ contract Waitlist is IWaitlist {
   ) public {
     uint numCommitments = commitments.length;
     require(!isLocked, "Waitlist is already locked.");
-    // Note: The current locker verifier circuit requires the number of commitments to be a power of 2
-    // TODO: Remove this constraint, possibly by adding extra Merkle leaves
+    // The current locker verifier circuit requires the number of commitments to be a power of 2
     require(numCommitments != 0 && (numCommitments & (numCommitments - 1)) == 0, "Waitlist must have a number of users equal to a nonzero power of 2 to be locked.");
     for (uint i=0; i<numCommitments; i++) {
       require(commitments[i] == pubSignals[i+1], "Wrong commitments used to generate locking proof.");
@@ -90,7 +89,8 @@ contract Waitlist is IWaitlist {
     require(lockerVerifier.verifyProof(proof, pubSignals), "Locking proof is invalid.");
 
     isLocked = true;
-    merkleRoot = pubSignals[0]; // Merkle root is returned as a public output of the proof
+    // Merkle root is returned as a public output of the proof
+    merkleRoot = pubSignals[0]; 
     emit Lock(msg.sender);
   }
 

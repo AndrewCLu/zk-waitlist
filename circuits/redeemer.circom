@@ -3,7 +3,8 @@ pragma circom 2.0.0;
 include "../node_modules/circomlib/circuits/poseidon.circom";
 
 // Allows a user to provide a proof that they know the secret which claimed a spot on the waitlist
-template Redeemer(N) { // N is the depth of the Merkle tree
+// N is the depth of the Merkle tree
+template Redeemer(N) { 
   signal input secret;
   signal input merkle_branch[N]; // Values of the nodes on the Merkle branch
   signal input node_is_left[N]; // Represents if the node is on the left or right of its neighbor
@@ -27,12 +28,10 @@ template Redeemer(N) { // N is the depth of the Merkle tree
   var current_hash = leaf_hasher.out;
 
   // Compute the Merkle root based on the claimed branch
-  // TODO: Refactor this into a merkle circuit
   for (var i=0; i<N; i++) {
     merkle_hashers[i] = Poseidon(2);
     var node_to_hash_is_left = node_is_left[i];
     var node_to_hash = merkle_branch[i];
-    // TODO: Fix this logic to make it more readable
     var left_node = (node_to_hash - current_hash)*node_to_hash_is_left + current_hash;
     var right_node = (node_to_hash - current_hash)*(1 - node_to_hash_is_left) + current_hash;
     merkle_hashers[i].inputs[0] <== left_node;
