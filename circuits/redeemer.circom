@@ -41,4 +41,4 @@ template Redeemer(N) {
   merkle_root <== current_hash;
 }
 
-component main = Redeemer(2);
+component main = Redeemer(1);

@@ -31,4 +31,4 @@ template Locker(N) {
   merkle_root <== merkle_tree_nodes[2*N-2]; 
 }
 
-component main {public [commitments]} = Locker(4);
+component main {public [commitments]} = Locker(2);
