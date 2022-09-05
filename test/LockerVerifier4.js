@@ -4,7 +4,7 @@ const { loadFixture } = require("@nomicfoundation/hardhat-network-helpers");
 
 describe("Locker verifier contract", function () {
   async function deployTokenFixture() {
-    const Verifier = await ethers.getContractFactory("LockerVerifier");
+    const Verifier = await ethers.getContractFactory("LockerVerifier4");
     const verifier = await Verifier.deploy();
 
     return verifier;

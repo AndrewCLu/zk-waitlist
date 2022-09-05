@@ -29,7 +29,7 @@ const REDEEMER_NULLIFIER_2 = "10339370758182708972242003821912733314943307639842
 describe("Waitlist contract", function () {
   async function deploy4PersonWaitlist() {
     const signers = await ethers.getSigners();
-    const LockerVerifier = await ethers.getContractFactory("LockerVerifier");
+    const LockerVerifier = await ethers.getContractFactory("LockerVerifier4");
     const lockerVerifier = await LockerVerifier.deploy();
 
     const RedeemerVerifier = await ethers.getContractFactory("RedeemerVerifierDepth2");

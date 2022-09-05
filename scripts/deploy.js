@@ -4,12 +4,12 @@ async function main() {
   console.log("Deploying contracts with the account:", deployer.address);
   console.log("Starting account balance:", (await deployer.getBalance()).toString());
 
-  const LockerVerifier = await ethers.getContractFactory("LockerVerifier");
+  const LockerVerifier = await ethers.getContractFactory("LockerVerifier2");
   const lockerVerifier = await LockerVerifier.deploy();
   await lockerVerifier.deployed();
   console.log("Locker verifier address: ", lockerVerifier.address);
 
-  const RedeemerVerifier = await ethers.getContractFactory("RedeemerVerifierDepth2");
+  const RedeemerVerifier = await ethers.getContractFactory("RedeemerVerifierDepth1");
   const redeemerVerifier = await RedeemerVerifier.deploy();
   await redeemerVerifier.deployed();
   console.log("Redeemer verifier address: ", redeemerVerifier.address);
