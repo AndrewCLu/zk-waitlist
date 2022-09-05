@@ -15,7 +15,7 @@ async function main() {
   console.log("Redeemer verifier address: ", redeemerVerifier.address);
 
   const Waitlist = await ethers.getContractFactory("Waitlist");
-  const waitlist = await Waitlist.deploy(4, lockerVerifier.address, redeemerVerifier.address);
+  const waitlist = await Waitlist.deploy(2, lockerVerifier.address, redeemerVerifier.address);
   await waitlist.deployed();
   console.log("Waitlist address: ", waitlist.address);
 
