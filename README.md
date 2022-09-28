@@ -1,6 +1,6 @@
 # ZK Waitlist
 
-The circuits and contracts in this repo describe the backend for a privacy-preserving waitlist based on zero knowledge proofs. A demo of this waitlist can be found at zkwaitlist.app, where you can deploy and test your own waitlist. 
+The circuits and contracts in this repo describe the backend for a privacy-preserving waitlist based on zero knowledge proofs. A demo of this waitlist can be found at [zkwaitlist.app](zkwaitlist.app), where you can deploy and test your own waitlist. 
 
 We model a smart contract waitlist as a construct where users first join the waitlist (i.e. "claim" a spot), and then subsequently "redeem" their claimed spot. Because all Ethereum transactions are public, a typical smart contract waitlist suffers the issue that observers can see which accounts are claiming and/or redeeming certain spots on the waitlist. Most pertinently, an adversary can track the address that claimed a spot, see which address redeems that spot, and plausibly link the two addresses to the same party. The purpose of a privacy-preserving waitlist is to make it infeasible for onlookers to correlate the actions of claiming and redeeming to a shared address pool. 
 
